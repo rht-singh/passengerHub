@@ -16,6 +16,7 @@ const HeaderMain = (props) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
+  const [scrolling, setScrolling] = useState(false);
 
   const isLoggedOut = useSelector(getMemoizedAuthenticationData);
   const userData = JSON.parse(localStorage.getItem("userDetails"));
@@ -115,11 +116,31 @@ const HeaderMain = (props) => {
     console.log("click ", e);
     // e.key === '/login' &&  dispatch(LogoutAction(history))
   };
+  const randomBgColor = () => {
+    const x = Math.floor(Math.random() * 256);
+    const y = Math.floor(Math.random() * 256);
+    const z = Math.floor(Math.random() * 256);
+    const bgColor = "rgb(" + x + "," + y + "," + z + ")";
+    return bgColor;
+  }
+  const handleScroll = () => {
+    if (window.pageYOffset >= 10) {
+      console.log("Scrolling is true");
+      return true;
+    } else {
+      return false;
+    }
+  }
+  useEffect(() => {
+    handleScroll();
+    console.log("HEADER 2");
+  }, [])
+
 
   return (
     <>
       {!token ? (
-        <div className="header-home">
+        <div className="header-home" style={{ background: handleScroll() ? "white" : "transparent" }} >
           <div className="container-fluid">
             <div className="header-desktop">
               <Menu
@@ -197,7 +218,7 @@ const HeaderMain = (props) => {
           </div>
         </div>
       ) : (
-        <div className="header-home">
+          <div className="header-home" style={{ background: handleScroll() ? "white" : "transparent" }} >
           <div className="container-fluid">
             <div className="header-desktop">
               <Menu
@@ -337,7 +358,7 @@ const HeaderMain = (props) => {
                     maxWidth: "180px",
                   }}
                 >
-                  {userData?.fullName ? userData?.fullName : ""}
+                    {userData?.fullName ? userData?.fullName : ""}
                 </label>
                 <div
                   style={{
@@ -347,23 +368,39 @@ const HeaderMain = (props) => {
                     paddingTop: "3px",
                   }}
                 >
-                  <img
-                    onClick={() => navigate("/Profile")}
-                    className="profile_img"
-                    src={
-                      userData?.isSocailAccount && userData?.profileImage
-                        ? userData?.profileImage
-                        : userData?.profileImage
-                        ? `${serverUrl.url}${userData?.profileImage}`
-                        : images.img2
+              
+                    {
+                      userData?.profileImage ?
+                        <img
+                        className="profile_img"
+                        onClick={() => navigate("/Profile")}
+                        src={
+                          userData?.isSocailAccount && userData?.profileImage
+                            ? userData?.profileImage
+                            : userData?.profileImage
+                              ? `${serverUrl.url}${userData?.profileImage}`
+                              : images.img2
+                        }
+                        style={{
+                          width: "35px!important",
+                          height: "35px",
+                          borderRadius: "50%",
+                          cursor: "pointer",
+                        }}
+                      /> :
+                        <div className="defaultImage" style={{
+                        borderRadius: "50%",
+                        position: "absolute",
+                        fontSize: "80px",
+                        width: "100%",
+                        height: "100%",
+                        textAlign: "center",
+                        paddingTop: "25px",
+                        fontWeight: "bold",
+                        background: randomBgColor()
+                      }}>{userData.lastName ? userData.firstName.charAt(0).toUpperCase() + userData.lastName.charAt(0).toUpperCase() : userData.firstName.charAt(0).toUpperCase() + userData.firstName.charAt(1)}
+                      </div>
                     }
-                    style={{
-                      width: "35px!important",
-                      height: "35px",
-                      borderRadius: "100%",
-                      cursor: "pointer",
-                    }}
-                  />
                 </div>
               </div>
               <div className="lite-text" onClick={() => props.handleClick()}>

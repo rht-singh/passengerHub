@@ -14,6 +14,9 @@ import {
   updateBookingsState,
 } from "../../../redux/actions/myBookings";
 import { FirstLetterUpperCase } from "../../../common/utils";
+import DownloadForOfflineIcon from '@mui/icons-material/DownloadForOffline';
+import { jsPDF } from "jspdf";
+
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -175,7 +178,7 @@ const TubeBookings = (props) => {
       sorter: true,
       sorterDirections: ["descend", "ascend"],
       render: (index, item) => {
-        return <div>{item.ticketId}</div>;
+        return <div><a href="/bookingdetails">{10000000 + item.ticketId}</a></div>;
       },
     },
     // {
@@ -256,15 +259,31 @@ const TubeBookings = (props) => {
       key: "Posted",
       render: (text, record) => {
         return (
-          <div>
-            <button
-              type="submit"
-              onClick={() =>
-                navigate("/bookingdetails", { state: { useDetails: record } })
-              }
-            >
-              <img src={images.view} />
-            </button>
+          <div className="billViewAndDownload" style={{display : "flex",justifyContent : "space-evenly"}}>
+            <div>
+              <button
+                type="submit"
+                onClick={() =>
+                  navigate("/bookingdetails", { state: { useDetails: record } })
+                }
+              >
+                <img alt="" src={images.view} />
+              </button>
+            </div>
+            <div style={{ paddingLeft: "25" }}>
+              <DownloadForOfflineIcon style={{ cursor: "pointer"}} onClick={() => {
+                const doc = new jsPDF();
+                doc.text(20, 20, `Ticket Id :  ${bookingDetails?.ticketId}`);
+                doc.text(20, 20, `First Name :  ${bookingDetails?.user?.billing?.firstName}`);
+                doc.text(20, 20, `Last Name :  ${bookingDetails?.user.billing.lastName}`);
+                doc.text(20, 20, `Address :  ${bookingDetails?.user.billing.address}`);
+                doc.text(20, 20, `Source :  ${bookingDetails?.source}`);
+                doc.text(20, 20, `Duration :  ${bookingDetails?.duration}`);
+                doc.text(20, 20, `Booking Date:  ${bookingDetails?.bookingDate}`);
+                doc.text(20, 20, `Status :  ${bookingDetails?.status}`);
+                doc.save("bill.pdf");
+              }} />
+            </div>
           </div>
         );
       },
@@ -295,7 +314,7 @@ const TubeBookings = (props) => {
               });
             }}
           >
-            {item.ticketId}
+            <a href="/bookingdetails">{10000000 + item.ticketId}</a> 
           </div>
         );
       },
@@ -366,17 +385,31 @@ const TubeBookings = (props) => {
       key: "Posted",
       render: (text, record) => {
         return (
-          <div>
-            <button
-              type="submit"
-              onClick={() => {
-                navigate("/bookingdetails", {
-                  state: { useDetails: record },
-                });
-              }}
-            >
-              <img src={images.view} />
-            </button>
+          <div className="billViewAndDownload" style={{ display: "flex", justifyContent : "space-evenly" }}>
+            <div>
+              <button
+                type="submit"
+                onClick={() =>
+                  navigate("/bookingdetails", { state: { useDetails: record } })
+                }
+              >
+                <img alt="" src={images.view} />
+              </button>
+            </div>
+            <div style={{ paddingLeft: "25" }}>
+              <DownloadForOfflineIcon style={{ cursor: "pointer"}} onClick={() => {
+                const doc = new jsPDF();
+                doc.text(20, 20, `Ticket Id :  ${bookingDetails?.ticketId}`);
+                doc.text(20, 20, `First Name :  ${bookingDetails?.user?.billing?.firstName}`);
+                doc.text(20, 20, `Last Name :  ${bookingDetails?.user.billing.lastName}`);
+                doc.text(20, 20, `Address :  ${bookingDetails?.user.billing.address}`);
+                doc.text(20, 20, `Source :  ${bookingDetails?.source}`);
+                doc.text(20, 20, `Duration :  ${bookingDetails?.duration}`);
+                doc.text(20, 20, `Booking Date:  ${bookingDetails?.bookingDate}`);
+                doc.text(20, 20, `Status :  ${bookingDetails?.status}`);
+                doc.save("bill.pdf");
+              }} />
+            </div>
           </div>
         );
       },
@@ -470,7 +503,7 @@ const TubeBookings = (props) => {
           </h2>
           <hr style={{ border: "1px solid gray", margin: "0" }} />
           <h4 style={{ marginTop: ".5rem", fontSize: "20px", fontWeight: 600 }}>
-            Order number : &nbsp; 115551664
+            Order number : {10000000 +  bookingDetails.ticketId}
           </h4>
 
           <h4 style={{ marginTop: ".5rem", fontSize: "20px", fontWeight: 600 }}>
@@ -740,7 +773,6 @@ const TubeBookings = (props) => {
               pagination={false}
             />
           )}
-          {console.log(tubeBookingsList, "tttttttttttttttt")}
           <Pagination
             className="pagination"
             total={tubeBookingsPagination?.totalCount}

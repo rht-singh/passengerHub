@@ -18,8 +18,6 @@ import { Collapse } from "antd";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import ReCAPTCHA from "react-google-recaptcha";
-import { captchaCode } from "../../themes/appConstant";
 import { useLocation } from "react-router";
 import { removeEmojis } from "../../common/utils";
 import { toast } from "react-nextjs-toast";
@@ -39,7 +37,6 @@ const Login = (props) => {
   const authenticationData = useSelector(getMemoizedAuthenticationData);
   const { forgotPasswordSuccess, drawerState, otpSend } = authenticationData;
 
-  const [captcha, setCaptcha] = useState(false);
   useLayoutEffect(() => {
     if (forgotPasswordSuccess) {
       handleCancel();
@@ -69,9 +66,7 @@ const Login = (props) => {
   const [OTPValue, setOTPValue] = useState("");
   const [errorOTPInput, setErrorOTPInput] = useState("");
 
-  function onChange(value) {
-    console.log("Captcha value:", value);
-  }
+  
   const { SubMenu } = Menu;
   var settings = {
     dots: true,
@@ -117,19 +112,10 @@ const Login = (props) => {
       .required("Please enter email address."),
     password: Yup.string().required("Please enter password."),
   });
-  const handleCaptcha = (d) => {
-    setCaptcha(d);
-  };
-
+  
   const handleFormSubmit = (values, { setSubmitting }) => {
     // console.log(state.prevPage, parsedData, "ssssssssssssssssssss");
-    if (!captcha) {
-      toast.notify("Captcha not verified", {
-        duration: 5,
-        type: "error",
-      });
-      return false;
-    }
+   
     if (!navigator.onLine) {
       // dispatch(showSuccessSnackbar({ type: "error", msg: 'Please check your internet connection.' }))
     } else {
@@ -459,12 +445,7 @@ const Login = (props) => {
                             </span>
                           </div>
                         </div>
-                        <div>
-                          <ReCAPTCHA
-                            sitekey={captchaCode}
-                            onChange={handleCaptcha}
-                          />
-                        </div>
+                        
                         <div className="login_button">
                           <div className="button_bottom">
                             <button type="submit" class="button text">

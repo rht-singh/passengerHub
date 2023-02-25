@@ -17,8 +17,6 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { removeEmojis } from "../../common/utils";
 import { PlusOutlined, UserOutlined } from "@ant-design/icons";
-import ReCAPTCHA from "react-google-recaptcha";
-import { captchaCode } from "../../themes/appConstant";
 import { toast } from "react-nextjs-toast";
 import AppleLogin from "../../common/AppleLogin";
 import GoogleLogin from "../../common/GoogleLogin";
@@ -63,7 +61,6 @@ const Register = (props) => {
   const registerData = useSelector(getMemoizedAuthenticationData);
   const { registerSuccess } = registerData;
   const [userImage, setUserImage] = useState("");
-  const [captcha, setCaptcha] = useState(false);
   const imgInput = useRef(null);
 
   useLayoutEffect(() => {
@@ -87,10 +84,7 @@ const Register = (props) => {
     }
   };
 
-  const handleCaptcha = (d) => {
-    setCaptcha(d);
-  };
-
+ 
   const { SubMenu } = Menu;
   var settings = {
     dots: true,
@@ -190,13 +184,7 @@ const Register = (props) => {
   });
 
   const handleFormSubmit = (values, { setSubmitting }) => {
-    if (!captcha) {
-      toast.notify("Captcha not verified", {
-        duration: 5,
-        type: "error",
-      });
-      return false;
-    }
+   
     if (!navigator.onLine) {
     } else {
       const fd = new FormData();
@@ -1029,12 +1017,7 @@ const Register = (props) => {
                           ) : null}
                         </div> */}
 
-                        <div>
-                          <ReCAPTCHA
-                            sitekey={captchaCode}
-                            onChange={handleCaptcha}
-                          />
-                        </div>
+                    
 
                         <div className="login_button">
                           <div

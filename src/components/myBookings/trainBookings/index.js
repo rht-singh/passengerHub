@@ -13,6 +13,9 @@ import {
   updateBookingsState,
   cancelBookingInitiate,
 } from "../../../redux/actions/myBookings";
+import DownloadForOfflineIcon from '@mui/icons-material/DownloadForOffline';
+import { jsPDF } from "jspdf";
+
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -151,6 +154,10 @@ const TrainBookings = (props) => {
     }
   };
 
+  console.log('====================================');
+  console.log(trainBookingsData);
+  console.log('====================================');
+
   const columns = [
     // {
     //   title: "TPH Number",
@@ -236,15 +243,30 @@ const TrainBookings = (props) => {
       key: "Posted",
       render: (text, record) => {
         return (
-          <div>
-            <button
-              type="submit"
-              onClick={() =>
-                navigate("/bookingdetails", { state: { useDetails: record } })
-              }
-            >
-              <img alt="" src={images.view} />
-            </button>
+          <div className="billViewAndDownload" style={{ display: "flex", justifyContent: "space-evenly" }}>
+            <div>
+              <button
+                type="submit"
+                onClick={() =>
+                  navigate("/bookingdetails", { state: { useDetails: record } })
+                }
+              >
+                <img alt="" src={images.view} />
+              </button>
+            </div>
+            <div style={{paddingLeft: "15" }}>
+              <DownloadForOfflineIcon style={{ cursor: "pointer"}} onClick={() => {
+                const doc = new jsPDF();
+                doc.text(20, 20, `Ticket Id :  ${trainBookingsData?.trainBookingsList.ticketId}`);
+                doc.text(20, 20, `Source :  ${trainBookingsData?.trainBookingsList.source}`);
+                doc.text(20, 20, `Destination :  ${trainBookingsData?.trainBookingsList.destination}`);
+                doc.text(20, 20, `Last Name :  ${trainBookingsData?.trainBookingsList.endDate}`);
+                doc.text(20, 20, `Address :  ${trainBookingsData?.trainBookingsList.price}`);
+                // doc.text(20, 20, `Duration :  ${trainBookingsData?.trainBookingsList.user.email}`);
+                doc.text(20, 20, `Booking Date:  ${trainBookingsData?.trainBookingsList.user.phoneNumber}`);
+                doc.save("bill.pdf");
+              }} />
+            </div>
           </div>
         );
       },
@@ -455,16 +477,30 @@ const TrainBookings = (props) => {
       key: "Posted",
       render: (text, record) => {
         return (
-          <div>
-            <button
-              type="submit"
-              onClick={() =>
-                navigate("/bookingdetails", { state: { useDetails: record } })
-              }
-            >
-              {" "}
-              <img src={images.view} />
-            </button>
+          <div className="billViewAndDownload" style={{ display: "flex", justifyContent: "space-evenly" }}>
+            <div>
+              <button
+                type="submit"
+                onClick={() =>
+                  navigate("/bookingdetails", { state: { useDetails: record } })
+                }
+              >
+                <img alt="" src={images.view} />
+              </button>
+            </div>
+            <div style={{ paddingLeft: "15" }}>
+              <DownloadForOfflineIcon style={{ cursor: "pointer"}} onClick={() => {
+                const doc = new jsPDF();
+                doc.text(20, 20, `Ticket Id :  ${trainBookingsData?.trainBookingsList.ticketId}`);
+                doc.text(20, 20, `Source :  ${trainBookingsData?.trainBookingsList.source}`);
+                doc.text(20, 20, `Destination :  ${trainBookingsData?.trainBookingsList.destination}`);
+                doc.text(20, 20, `Last Name :  ${trainBookingsData?.trainBookingsList.endDate}`);
+                doc.text(20, 20, `Address :  ${trainBookingsData?.trainBookingsList.price}`);
+                // doc.text(20, 20, `Duration :  ${trainBookingsData?.trainBookingsList.user.email}`);
+                doc.text(20, 20, `Booking Date:  ${trainBookingsData?.trainBookingsList.user.phoneNumber}`);
+                doc.save("bill.pdf");
+              }} />
+            </div>
           </div>
         );
       },

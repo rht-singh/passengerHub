@@ -4,8 +4,6 @@ export const serverUrl = {
   // url: "http://localhost:5000/",
 };
 
-export const captchaCode = "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI";
-
 export const appConstants = {
   newBooking: "New Booking",
   profile_incomplete: "Please complete your profile",

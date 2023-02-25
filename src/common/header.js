@@ -5,6 +5,7 @@ import { Breadcrumb, Layout, Menu } from "antd";
 import images from "./../themes/appImage";
 import { Link, useNavigate } from "react-router-dom";
 import { MenuOutlined } from "@ant-design/icons";
+import ReactDOM from 'react-dom';
 
 import { getMemoizedAuthenticationData } from "../redux/selectors/authentication";
 import { logoutInitiate } from "../redux/actions/authentication";
@@ -12,6 +13,7 @@ import { appConstants, serverUrl } from "../themes/appConstant";
 import { fontWeight } from "@mui/system";
 
 const { Header, Content, Footer, Sider } = Layout;
+
 
 const HeaderMain = (props) => {
   const navigate = useNavigate();
@@ -25,35 +27,29 @@ const HeaderMain = (props) => {
   //   color:"black",
   //   fontWeight:'600'
   // }
-
   const [linkstyle, setlinkstyle] = useState({});
   const [LogoChange, setLogoChange] = useState(images.logohome);
-  const [HeaderBack, setHeaderBack] = useState("#fff");
-  // background changing code
-
-  //   const ChangeBackground=()=>{
-
-  // if(window.scrollY<='200'){
-  //   setHeaderBack('transparent'), setLogoChange(images.headerlogo2),setlinkstyle({ color:"white",  fontWeight:'600' })
-  // }
-  // else{
-  //   setHeaderBack('#fff'), setLogoChange(images.logohome),setlinkstyle({ color:"black",  fontWeight:'600' })
-  // }
-  //   }
-
-  //   useEffect(() => {
-  //     window.addEventListener('scroll', ChangeBackground);
-  //     return () => {
-  //       window.removeEventListener('scroll', ChangeBackground);
-  //     };
-  //   }, []);
+  
 
   const isLoggedOut = useSelector(getMemoizedAuthenticationData);
   const userData = JSON.parse(localStorage.getItem("userDetails"));
   const { logoutSuccess } = isLoggedOut;
   const { SubMenu } = Menu;
   let token = localStorage.getItem("token");
-
+  
+  const handleScroll = () => {
+    if (window.pageYOffset >= 10) {
+      console.log("Scrolling");
+      return true;
+    } else {
+      return false;
+    }
+  }
+  useEffect(() => {
+    handleScroll()
+    console.log("HEADER 1");
+  }, [])
+  
   useLayoutEffect(() => {
     if (logoutSuccess) {
       navigate("/");
@@ -147,10 +143,23 @@ const HeaderMain = (props) => {
     // e.key === '/login' &&  dispatch(LogoutAction(history))
   };
 
+  const onLoad = () => randomBgColor();
+
+  const randomBgColor = () => {
+    const x = Math.floor(Math.random() * 256);
+    const y = Math.floor(Math.random() * 256);
+    const z = Math.floor(Math.random() * 256);
+    const bgColor = "rgb(" + x + "," + y + "," + z + ")";
+    return bgColor;
+  }
+
+  console.log('====================================');
+  console.log(handleScroll());
+  console.log(window.pageYOffset)
   return (
     <>
       {!token ? (
-        <div className="header-home" style={{ background: HeaderBack }}>
+        <div className="header-home" style={{ background: {handleScroll} ? "white" : "transparent"}}>
           <div className="container-fluid">
             <div className="header-desktop">
               <Menu
@@ -228,7 +237,7 @@ const HeaderMain = (props) => {
           </div>
         </div>
       ) : (
-        <div className="header-home">
+          <div className="header-home" style={{ background: handleScroll() ? "white" : "transparent" }}>
           <div className="container-fluid">
             <div className="header-desktop">
               <Menu
@@ -321,24 +330,43 @@ const HeaderMain = (props) => {
                         width: "40px",
                         height: "40px",
                         lineHeight: "26px",
-                        paddingTop: "3px",
+                          paddingTop: "3px",
+                        position : "relative"
                       }}
                     >
-                      <img
-                        onClick={() => navigate("/Profile")}
-                        src={
-                          userData?.isSocailAccount && userData?.profileImage
-                            ? userData?.profileImage
-                            : userData?.profileImage
-                            ? `${serverUrl.url}${userData?.profileImage}`
-                            : images.img2
+                        {
+                          userData?.profileImage ?
+                            <img
+                              className="profile_img"
+                              onClick={() => navigate("/Profile")}
+                              src={
+                                userData?.isSocailAccount && userData?.profileImage
+                                  ? userData?.profileImage
+                                  : userData?.profileImage
+                                    ? `${serverUrl.url}${userData?.profileImage}`
+                                    : images.img2
+                              }
+                              style={{
+                                width: "35px!important",
+                                height: "35px",
+                                borderRadius: "50%",
+                                cursor: "pointer",
+                              }}
+                            /> :
+                            <div className="defaultImage" style={{
+                              borderRadius: "50%",
+                              position: "absolute",
+                              fontSize: "18px",
+                              width: "100%",
+                              height: "100%",
+                              textAlign: "center",
+                              paddingTop: "6px",
+                              fontWeight: "bold",
+                              background: onLoad(),
+                              color : "white"
+                            }}>{userData.lastName ? userData.firstName.charAt(0).toUpperCase() + userData.lastName.charAt(0).toUpperCase() : userData.firstName.charAt(0).toUpperCase() + userData.firstName.charAt(1)}
+                            </div>
                         }
-                        style={{
-                          width: "35px",
-                          height: "35px",
-                          borderRadius: "100%",
-                        }}
-                      />
                     </div>
                   </div>
                 </Menu.Item>
@@ -369,32 +397,48 @@ const HeaderMain = (props) => {
                 >
                   {userData?.fullName ? userData?.fullName : ""}
                 </label>
-                <div
-                  style={{
-                    width: "40px",
-                    height: "40px",
-                    lineHeight: "26px",
-                    paddingTop: "3px",
-                  }}
-                >
-                  <img
-                    onClick={() => navigate("/Profile")}
-                    className="profile_img"
-                    src={
-                      userData?.isSocailAccount && userData?.profileImage
-                        ? userData?.profileImage
-                        : userData?.profileImage
-                        ? `${serverUrl.url}${userData?.profileImage}`
-                        : images.img2
-                    }
+                  <div
                     style={{
-                      width: "35px!important",
-                      height: "35px",
-                      borderRadius: "100%",
-                      cursor: "pointer",
+                      width: "40px",
+                      height: "40px",
+                      lineHeight: "26px",
+                      paddingTop: "3px",
                     }}
-                  />
-                </div>
+                  >
+                   
+                    {
+                      userData?.profileImage ?
+                        <img
+                          className="profile_img"
+                          onClick={() => navigate("/Profile")}
+                          src={
+                            userData?.isSocailAccount && userData?.profileImage
+                              ? userData?.profileImage
+                              : userData?.profileImage
+                                ? `${serverUrl.url}${userData?.profileImage}`
+                                : images.img2
+                          }
+                          style={{
+                            width: "35px!important",
+                            height: "35px",
+                            borderRadius: "50%",
+                            cursor: "pointer",
+                          }}
+                        /> :
+                        <div className="defaultImage" style={{
+                          borderRadius: "50%",
+                          position: "absolute",
+                          fontSize: "80px",
+                          width: "100%",
+                          height: "100%",
+                          textAlign: "center",
+                          paddingTop: "25px",
+                          fontWeight: "bold",
+                          background: onLoad()
+                        }}>{userData.lastName ? userData.firstName.charAt(0).toUpperCase() + userData.lastName.charAt(0).toUpperCase() : userData.firstName.charAt(0).toUpperCase() + userData.firstName.charAt(1)}
+                        </div>
+                    }
+                  </div>
               </div>
               <div className="lite-text" onClick={() => props.handleClick()}>
                 <MenuOutlined />

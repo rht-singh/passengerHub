@@ -111,7 +111,6 @@ const MobileSidebar = (props) => {
   const authenticationData = useSelector(getMemoizedAuthenticationData);
   const { drawerState } = authenticationData;
   const handleClick = (e) => {
-    console.log("click ", e);
     navigate(e.key);
     dispatch(drawerAction(!drawerState, "drawerState"));
   };
@@ -139,7 +138,6 @@ const MobileSidebar = (props) => {
         onOk={logoutModalClose}
         onCancel={logoutModalClose}
       >
-        {console.log("popup is available", logoutModalVisible)}
         <div className="text_line_view data-view">
           <div className="text-center" style={{ padding: "20px 0px" }}>
             <p>Are You Sure, You Want To Remove This Card?</p>

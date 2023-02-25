@@ -11,6 +11,7 @@ import MobileSidebar from "../../../common/mobilesidebar";
 import HeaderMain from "../../../common/header";
 import FooterMain from "../../../common/footer";
 import { appConstants } from "../../../themes/appConstant";
+import { jsPDF } from "jspdf";
 
 import printJS from "print-js";
 import PrintProvider, { Print, NoPrint } from "react-easy-print";
@@ -64,7 +65,7 @@ const BookingDetails = (props) => {
   }, []);
 
   const handleCancel = () => {
-    setIsModalOpen(false);
+    setIsModalOpen1(false);
   };
 
   const handleOk = () => {
@@ -327,6 +328,7 @@ const BookingDetails = (props) => {
             <div
               style={{
                 marginTop: "1rem",
+                marginBottom : "2rem",
                 display: "flex",
                 flexDirection: "row",
                 justifyContent: "center",
@@ -340,20 +342,23 @@ const BookingDetails = (props) => {
                   color: "white",
                   fontWeight: 600,
                 }}
-                onClick={() => setIsModalOpen1(true)}
+                onClick={() => {
+                  setIsModalOpen1(true);
+                }}
               >
                 Cancel
               </Button>
               <Button
                 style={{
-                  width: "6rem",
                   height: "2rem",
                   marginLeft: "10px",
                   borderRadius: "5px",
                   color: "#000",
                   fontWeight: 600,
                 }}
-                onClick={() => setIsModalOpen(true)}
+                onClick={() => {
+                  setIsModalOpen1(true);
+                }}
               >
                 Refund
               </Button>
@@ -368,7 +373,8 @@ const BookingDetails = (props) => {
                 }}
                 // onClick={() => printJS("test", "html")}
                 onClick={() => {
-                  window.print();
+                  const doc = new jsPDF();
+                  doc.save("bill.pdf");
                 }}
               >
                 Download

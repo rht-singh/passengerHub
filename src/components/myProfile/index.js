@@ -23,7 +23,7 @@ const Profile = (props) => {
   const dispatch = useDispatch();
 
   const userData = JSON.parse(localStorage.getItem("userDetails"));
-
+ 
   const [value, setValue] = React.useState(1);
 
   const authenticationData = useSelector(getMemoizedAuthenticationData);
@@ -33,6 +33,17 @@ const Profile = (props) => {
     userProfileLoader,
     userProfileSuccess,
   } = authenticationData;
+
+  const randomBgColor = () => {
+    const x = Math.floor(Math.random() * 256);
+    const y = Math.floor(Math.random() * 256);
+    const z = Math.floor(Math.random() * 256);
+    const bgColor = "rgb(" + x + "," + y + "," + z + ")";
+    return bgColor;
+  }
+
+
+  
 
   useLayoutEffect(() => {
     dispatch(userProfileInitiate(null, navigate));
@@ -64,15 +75,28 @@ const Profile = (props) => {
             <img src={images.border1} style={{ width: '400px' }} />
           </div> */}
           <div class="team-img">
-            <img
-              src={
-                userData?.isSocailAccount && userData?.profileImage
-                  ? userData?.profileImage
-                  : userData?.profileImage
-                  ? `${serverUrl.url}${userData?.profileImage}`
-                  : images.img2
-              }
-            />
+            {
+              userData?.profileImage ? <img
+                src={
+                  userData?.isSocailAccount && userData?.profileImage
+                    ? userData?.profileImage
+                    : userData?.profileImage
+                      ? `${serverUrl.url}${userData?.profileImage}`
+                      : images.img2
+                }
+              /> : <div className="defaultImage" onLoad={() => randomBgColor()} style={{
+                  borderRadius: "50%",
+                  position: "absolute",
+                fontSize: "80px",
+                width: "100%",
+                height: "100%",
+                textAlign: "center",
+                  paddingTop: "25px",
+                  fontWeight: "bold",
+                  color : "white"
+                }}>{userData.lastName ? userData.firstName.charAt(0).toUpperCase() + userData.lastName.charAt(0).toUpperCase() : userData.firstName.charAt(0).toUpperCase() + userData.firstName.charAt(1)}
+                </div>
+            }
           </div>
           <div className="row">
             <div className="text-input-filed" style={{ width: "100%" }}>
@@ -321,8 +345,8 @@ const Profile = (props) => {
                             Value={
                               userProfileDetail?.card?.cardType
                                 ? FirstLetterUpperCase(
-                                    userProfileDetail?.card?.cardType
-                                  )
+                                  userProfileDetail?.card?.cardType
+                                )
                                 : ""
                             }
                             disabled
